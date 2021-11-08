@@ -1,12 +1,13 @@
 import heapq
 
 class Node:
-    def __init__(self,data,h,g):
+    def __init__(self,data,h,g,depth):
         self.data = data
         self.children = []
         self.parent = None
         self.h = h #heuristic cost
         self.g = g #cost to get to depth to depth
+        self.depth = depth
 
     def add_child(self,child):
         child.parent = self
@@ -19,7 +20,7 @@ def test_puzzle():
 
 
 
-    testPuzzle = [Node(1,0,1),Node(2,0,1),Node(3,0,1),Node(4,0,1),Node(5,0,1),Node(6,0,1),Node(7,0,1),Node(8,0,1),Node(0,0,1)]
+    testPuzzle = [Node(1,0,1,0),Node(2,0,1,0),Node(3,0,1,0),Node(4,0,1,0),Node(5,0,1,0),Node(6,0,1,0),Node(7,0,1,0),Node(8,0,1,0),Node(0,0,1,0)]
     return testPuzzle
 
 #return index where 0 is located     
@@ -39,21 +40,38 @@ def UCS(test_tree):
     visited = []
     depth = 0
     path = []
+    expandCount = 0
     while nodes:
         if not nodes:
             print("Empty queue. No solution")
         
         node = heapq.heappop(nodes)
         visited.append(node)
-        depth = depth + 1
         if node.data == find_index(node.data) + 1:
             path.append(node)
+        expandCount += expand_nodes(test_tree,find_index(test_tree,node.data),node)
 
 
-def expand_nodes(self,test_tree,index):
+def expand_nodes(self,test_tree,index,node):
+    
     match index:
-        case '0':
-            if 
+        case 0:
+            expandCount = 2
+            node.add_child(test_tree[1])
+            node.add_child(test_tree[3])
+            return expandCount
+        case 1:
+            expandCount = 3
+            node.add_child(test_tree[0])
+            node.add_child(test_tree[2])
+            node.add_child(test_tree[4])
+            return expandCount
+        case 2: 
+            expandCount = 2
+            node.add_child(test_tree[1])
+            node.add_child(test_tree[5])
+            return expandCount
+
 
 
 
