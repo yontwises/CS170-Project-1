@@ -21,20 +21,29 @@ def test_puzzle():
     return testPuzzle
 
 #return index where 0 is located     
-def find_blank(puzzle):
+def find_index(puzzle,num):
     count = 0
     for node in puzzle:
         count = count + 1
-        if(node.data == 0):
+        if(node.data == num):
             index = count
 
     # print(index)
     return index
 
 def UCS(test_tree):
-    rootIndex = find_blank(test_tree) #create root
+    rootIndex = find_index(test_tree,0) #create root
     nodes = heapq.heapify(test_tree[rootIndex]) #create data structure to store initial state 
-    while(nodes.len() != 0):
+    visited = []
+    while nodes:
+        if not nodes:
+            print("Empty queue. No solution")
+        
+        node = heapq.heappop(nodes)
+        visited.append(node)
+        if node.data == find_index(node.data) + 1:
+            nodes = 
+
 
 
 
@@ -43,7 +52,7 @@ def UCS(test_tree):
 
 def main():
     test = test_puzzle()
-    find_blank(test)
+    find_index(test)
     
 
 if __name__== "__main__":
