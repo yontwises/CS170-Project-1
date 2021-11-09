@@ -5,7 +5,7 @@ class Node:
     def __init__(self,state):
     
         self.children = [] #list of children    
-        # self.parent = None possibly deprecated
+        # self.parent = None #deprecated bc don't need to move up tree
         self.h = 0 #heuristic cost
         self.depth = 0 #depth of node (g(n))
         self.visited = False #in place of visited list just set to true when expanding
@@ -20,8 +20,14 @@ def test_puzzle():
     #[4,5,6]
     #[7,8,0]
 
-    testPuzzle = ([1, 2, 3], [4,5,6], [7,8,0])
-    return testPuzzle
+    # goal_state = ([1, 2, 3], [4,5,6], [0,7,8]) #depth 2
+    goal_state = ([1, 2, 3], [5,0,6], [0,7,8]) #depth 4
+    # goal_state = ([1, 3, 6], [5,0,2], [4,7,8]) #depth 8
+    # goal_state = ([1, 3, 6], [5,0,7], [4,7,8]) #depth 12
+    # goal_state = ([1, 6, 7], [5,0,3], [4,8,2]) #depth 16
+    # goal_state = ([7, 1, 2], [4,8,5], [6,3,0]) #depth 20
+    # goal_state = ([0, 7, 2], [4,6,1], [3,5,8]) #depth 24
+    return goal_state
 
 #return index where 0 is located     
 #deprecated
@@ -36,8 +42,7 @@ def test_puzzle():
 #     return index
 
 def goal_state(problem):
-    #goal_state = ([1, 2, 3], [4,5,6], [7,8,0])
-    goal_state = ([1, 2, 3], [4,5,6], [0,7,8]) #depth 2
+    goal_state = ([1, 2, 3], [4,5,6], [7,8,0]) 
     if(problem == goal_state):
         return True
     else:
@@ -58,7 +63,6 @@ def UCS(problem):
             return 'failure'
         
         node = nodes.pop(0) #popoff front node
-        print(node.state)
         if node.visited is False:
             expandCount += 1
             node.visited = True
@@ -69,7 +73,9 @@ def UCS(problem):
         #Expand upon all operations on node and then put children into children list
         expandNode = expand_nodes(node,visitedPuzzles)
 
-        #Update g(n) aka depth 
+        #print(node.children[0])
+
+        #Update g(n) aka depth in children to be visited
         for child in node.children:
             child.depth = node.depth + 1
             child.h = 0
@@ -104,18 +110,18 @@ def expand_nodes(node,visited):
         left[rowIndex][columnIndex - 1] = temp
 
         if left not in visited:
-            node.children.append(left)
+            node.children.append(Node(left))
 
     #can move right if not at the last column
     if columnIndex < len(node.state) - 1:
         # to move right swap right in + 1 column
         right = copy.deepcopy(node.state)
-        temp = left[rowIndex][columnIndex]
+        temp = right[rowIndex][columnIndex]
         right[rowIndex][columnIndex] = right[rowIndex][columnIndex + 1]
         right[rowIndex][columnIndex+1] = temp
 
         if right not in visited:
-            node.children.append(right)
+            node.children.append(Node(right))
 
     #can move up if not on first row 
     if rowIndex > 0:
@@ -126,7 +132,7 @@ def expand_nodes(node,visited):
         up[rowIndex - 1][columnIndex] = temp
 
         if up not in visited:
-            node.children.append(up)
+            node.children.append(Node(up))
     #can move down if not last row 
     if rowIndex < len(node.state) - 1:
         down = copy.deepcopy(node.state)
@@ -135,11 +141,27 @@ def expand_nodes(node,visited):
         down[rowIndex + 1][columnIndex] = temp
 
         if down not in visited:
-            node.children.append(down)
+            node.children.append(Node(down))
     
     return node
 
-    
+def manhattan(puzzle):
+    goal_pzl = [[1, 2, 3], [4, 5, 6], [7, 8, 0]]
+    count = 0
+    gr, gc, r, c = 0, 0, 0, 0
+
+    for l in range(1, 9):
+        for i in range(len(puzzle)):
+            for j in range(len(puzzle)):
+                if int(puzzle[i][j]) == l:
+                    r = i
+                    c = j
+                if goal_pzl[i][j] == l:
+                    gr = i
+                    gc = j
+        count += abs(gr-r) + abs(gc-c)
+
+    return count
 
 
 
@@ -147,8 +169,15 @@ def expand_nodes(node,visited):
 def main():
 
     print(UCS(test_puzzle()))
-    # for node in test:
-    #     print(str(node.data) + ',')
+    # print(UCS(goal_state_0))
+    # print(UCS(goal_state_2))
+    # print(UCS(goal_state_4))
+    # print(UCS(goal_state_8))
+    # print(UCS(goal_state_12))
+    # print(UCS(goal_state_16))
+    # print(UCS(goal_state_20))
+    # print(UCS(goal_state_24))
+  
     
 
 if __name__== "__main__":
